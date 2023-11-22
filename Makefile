@@ -3,20 +3,20 @@ CXXFLAGS = -I"C:\Users\devan\OneDrive\Documents\Libraries\SFML-2.6.1\include" -D
 LDFLAGS = -L"C:\Users\devan\OneDrive\Documents\Libraries\SFML-2.6.1\lib" -static
 LIBS = -l sfml-graphics-s -l sfml-window-s -l sfml-system-s -l opengl32 -l freetype -l winmm -l gdi32
 
-all: tutorial-sfml
+all: main
 
-tutorial-sfml: tutorial-sfml.o
+main: main.o
 	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
 
-tutorial-sfml.o: tutorial-sfml.cpp
+main.o: main.cpp
 	$(CXX) -c $< $(CXXFLAGS)
 
 .PHONY: clean
 clean:
-	rm -f tutorial-sfml tutorial-sfml.o
+	rm -f main main.o
 
 
 
-#g++ -c tutorial-sfml.cpp -I"C:\Users\devan\OneDrive\Documents\Libraries\SFML-2.6.1\include" -DSFML_STATIC
-#g++ tutorial-sfml.o -o tutorial-sfml -L "C:\Users\devan\OneDrive\Documents\Libraries\SFML-2.6.1\lib" -l sfml-graphics-s -l sfml-window-s -l sfml-system-s -l opengl32 -l freetype -l winmm -l gdi32 -static
+#g++ -c main.cpp -I"C:\Users\devan\OneDrive\Documents\Libraries\SFML-2.6.1\include" -DSFML_STATIC
+#g++ main.o -o main -L "C:\Users\devan\OneDrive\Documents\Libraries\SFML-2.6.1\lib" -l sfml-graphics-s -l sfml-window-s -l sfml-system-s -l opengl32 -l freetype -l winmm -l gdi32 -static
 
