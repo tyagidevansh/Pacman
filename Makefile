@@ -1,19 +1,30 @@
-CXX = g++
-CXXFLAGS = -I"C:\Users\devan\OneDrive\Documents\Libraries\SFML-2.6.1\include" -DSFML_STATIC
-LDFLAGS = -L"C:\Users\devan\OneDrive\Documents\Libraries\SFML-2.6.1\lib" -static
-LIBS = -l sfml-graphics-s -l sfml-window-s -l sfml-system-s -l opengl32 -l freetype -l winmm -l gdi32
+# Makefile for Pacman project
 
-all: main
+# Compiler and flags
+CC = g++
+CFLAGS = -I"C:\Users\devan\OneDrive\Documents\Libraries\SFML-2.6.1\include" -DSFML_STATIC
+LDFLAGS = -L"C:\Users\devan\OneDrive\Documents\Libraries\SFML-2.6.1\lib" -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lfreetype -lwinmm -lgdi32 -static
 
-main: main.o
-	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
+# Source files
+SOURCES = Pacman.cpp main.cpp
 
-main.o: main.cpp
-	$(CXX) -c $< $(CXXFLAGS)
+# Object files
+OBJECTS = $(SOURCES:.cpp=.o)
 
-.PHONY: clean
+# Target executable
+TARGET = main
+
+all: $(TARGET)
+
+$(TARGET): $(OBJECTS)
+	$(CC) -o $@ $(OBJECTS) $(LDFLAGS)
+
+%.o: %.cpp
+	$(CC) -c $< -o $@ $(CFLAGS)
+
 clean:
-	rm -f main main.o
+	rm -f $(OBJECTS) $(TARGET)
+
 
 
 

@@ -1,51 +1,16 @@
-// #include <sfml/Graphics.hpp>
-
-// int main(){
-//     sf::RenderWindow window(sf::VideoMode(512, 512), "Tutorial", sf::Style::Close | sf::Style::Titlebar);
-//     window.setFramerateLimit(60);
-
-//     sf::CircleShape player(30.f);
-//     player.setFillColor(sf::Color::Yellow);
-
-//     sf::CircleShape inky(20.f, 3);
-    
-//     while (window.isOpen()){
-//         sf::Event event;
-//         while(window.pollEvent(event)){
-//             if(event.type == sf::Event::Closed){
-//                 window.close();
-//                 break;
-//             }    
-//         }
-
-//         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)){
-//             player.move(-2, 0);
-//         }
-//         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)){
-//             player.move(2, 0);
-//         }
-//         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)){
-//             player.move(0, -2);
-//         }
-//         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)){
-//             player.move(0, 2);
-//         }
-
-//         window.clear();
-//         window.draw(inky);
-//         window.draw(player);
-//         window.display();
-//     }
-
-//     return 0;
-// }
-
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <chrono>
+#include <array>
+
 #include "Headers/Global.hpp"
+#include "Headers/Pacman.hpp"
 int main() {
 	sf::RenderWindow window(sf::VideoMode(CELL_SIZE * MAP_WIDTH * SCREEN_RESIZE, (FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT) * SCREEN_RESIZE), "Pac-Man", sf::Style::Close);
     window.setView(sf::View(sf::FloatRect(0, 0, CELL_SIZE * MAP_WIDTH, FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT)));
+
+    bool game_won = false;
+
 
     std::vector<std::string> map = {
         " ################### ",
@@ -71,7 +36,9 @@ int main() {
         " ################### "
     };
 
-    while (window.isOpen()) {
+    //game loop
+    while (window.isOpen()) { 
+        //check if the window has been closed
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
@@ -80,7 +47,8 @@ int main() {
             }
         }
 
-        window.clear(sf::Color::Black);
+        unsigned short pacmanInitialX = 0;
+        unsigned short pacmanInitialY = 0;
 
         // Draw the map
         for (size_t i = 0; i < map.size(); ++i) {
@@ -99,9 +67,9 @@ int main() {
                         //cell.setFillColor(sf::Color::Yellow); // Pellet color
                         break;
                     case 'P':
-                        cell.setFillColor(sf::Color::Yellow); // Pac-Man color
+                        pacmanInitialX = static_cast<unsigned short>(j);
+                        pacmanInitialY = static_cast<unsigned short>(i);
                         break;
-                    // Add cases for other elements (ghosts, etc.) as needed
                     default:
                         cell.setFillColor(sf::Color::Black);
                         break;
@@ -112,6 +80,9 @@ int main() {
         }
 
         window.display();
+
+        Pacman pacman;
+        pacman.set_position(pacmanInitialX * CELL_SIZE, pacmanInitialY * CELL_SIZE);        
     }
 
     return 0;
