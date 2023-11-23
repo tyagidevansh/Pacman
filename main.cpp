@@ -1,12 +1,9 @@
 #include <SFML/Graphics.hpp>
-#include <iostream>
-#include <chrono>
-#include <array>
-
 #include "Headers/Global.hpp"
 #include "Headers/Pacman.hpp"
+
 int main() {
-	sf::RenderWindow window(sf::VideoMode(CELL_SIZE * MAP_WIDTH * SCREEN_RESIZE, (FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT) * SCREEN_RESIZE), "Pac-Man", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(CELL_SIZE * MAP_WIDTH * SCREEN_RESIZE, (FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT) * SCREEN_RESIZE), "Pac-Man", sf::Style::Close);
     window.setView(sf::View(sf::FloatRect(0, 0, CELL_SIZE * MAP_WIDTH, FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT)));
 
     std::vector<std::string> map = {
@@ -36,15 +33,19 @@ int main() {
     int pacmanInitialX = 10;
     int pacmanInitialY = 16;
 
-    Pacman pacman; 
+    Pacman pacman;
 
-    //game loop
-    while (window.isOpen()) { 
+    sf::Clock frameClock;
 
+    // Game loop
+    while (window.isOpen()) {
         sf::Event event;
 
-        pacman.move(map);
-        //check if the window has been closed
+        float deltaTime = frameClock.restart().asSeconds();
+
+        pacman.move(map, deltaTime);
+
+        // Check if the window has been closed
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
@@ -79,8 +80,9 @@ int main() {
                 window.draw(cell);
             }
         }
+
         pacman.draw(window);
-        window.display();    
+        window.display();
     }
 
     return 0;
