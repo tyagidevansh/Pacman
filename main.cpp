@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "Headers/Global.hpp"
 #include "Headers/Pacman.hpp"
+#include "Headers/MapCollision.hpp"
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(CELL_SIZE * MAP_WIDTH * SCREEN_RESIZE, (FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT) * SCREEN_RESIZE), "Pac-Man", sf::Style::Close);
@@ -44,11 +45,12 @@ int main() {
         float deltaTime = frameClock.restart().asSeconds();
 
         pacman.move(map, deltaTime);
-
+        //pacman.update(map, deltaTime, event);
         // Check if the window has been closed
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
+            
             pacman.handleInput(event);
         }
 
