@@ -14,9 +14,8 @@ public:
     Pacman();
     void initShape();
     void respawn();
-    bool wall_collision(std::vector<std::string>& map);
+    bool map_collision(bool i_collect_pellets, bool i_use_door, float i_x, float i_y, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map);
     void move(std::vector<std::string>& map, float deltaTime);
     void handleInput(sf::Event& event);
     void draw(sf::RenderWindow& window);
-    void update(std::vector<std::string>& map, float deltaTime, sf::Event& event);
 };

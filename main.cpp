@@ -1,13 +1,27 @@
+#include <array>
+#include <chrono>
+#include <cmath>
 #include <SFML/Graphics.hpp>
+
 #include "Headers/Global.hpp"
+#include "Headers/DrawText.hpp"
 #include "Headers/Pacman.hpp"
+#include "Headers/Ghost.hpp"
+#include "Headers/GhostManager.hpp"
+#include "Headers/ConvertSketch.hpp"
+#include "Headers/DrawMap.hpp"
 #include "Headers/MapCollision.hpp"
 
-int main() {
-    sf::RenderWindow window(sf::VideoMode(CELL_SIZE * MAP_WIDTH * SCREEN_RESIZE, (FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT) * SCREEN_RESIZE), "Pac-Man", sf::Style::Close);
-    window.setView(sf::View(sf::FloatRect(0, 0, CELL_SIZE * MAP_WIDTH, FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT)));
 
-    std::vector<std::string> map = {
+int main()
+{
+    bool game_won = false;
+    unsigned lag = 0;
+    unsigned level = 0;
+
+    std::chrono::time_point<std::chrono::steady_clock> previous_time;
+
+    std::array<std::string, MAP_HEIGHT> map_sketch = {
         " ################### ",
 		" #........#........# ",
 		" #o##.###.#.###.##o# ",
@@ -31,61 +45,14 @@ int main() {
 		" ################### "
     };
 
-    int pacmanInitialX = 10;
-    int pacmanInitialY = 16;
+    std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map{};
 
-    Pacman pacman;
+    std::array<Position, 4> ghost_positions;
 
-    sf::Clock frameClock;
+    sf::Event event;
 
-    // Game loop
-    while (window.isOpen()) {
-        sf::Event event;
+    sf::RenderWindow window(sf::VideoMode(CELL_SIZE * MAP_WIDTH * SCREEN_RESIZE, (FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT)*SCREEN_RESIZE), "Pacman", sf::Style::Close);
+    window.setView(sf::View(sf::FloatRect(0, 0, CELL_SIZE * MAP_HEIGHT * SCREEN_RESIZE, (FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT))));
 
-        float deltaTime = frameClock.restart().asSeconds();
-
-        pacman.move(map, deltaTime);
-        //pacman.update(map, deltaTime, event);
-        // Check if the window has been closed
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-            
-            pacman.handleInput(event);
-        }
-
-        // Draw the map
-        for (size_t i = 0; i < map.size(); ++i) {
-            for (size_t j = 0; j < map[i].size(); ++j) {
-                sf::RectangleShape cell(sf::Vector2f(CELL_SIZE, CELL_SIZE));
-                cell.setPosition(j * CELL_SIZE, i * CELL_SIZE);
-
-                switch (map[i][j]) {
-                    case '#':
-                        cell.setFillColor(sf::Color::Blue); // Wall color
-                        break;
-                    case '.':
-                    case ' ':
-                        cell.setFillColor(sf::Color::Black); // Empty space color
-                        break;
-                    case 'o':
-                        cell.setFillColor(sf::Color::Yellow); // Pellet color
-                        break;
-                    case 'P':
-                        cell.setFillColor(sf::Color::Black);
-                        break;
-                    default:
-                        cell.setFillColor(sf::Color::Black);
-                        break;
-                }
-
-                window.draw(cell);
-            }
-        }
-
-        pacman.draw(window);
-        window.display();
-    }
-
-    return 0;
+    
 }
